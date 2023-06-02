@@ -1,0 +1,16 @@
+{
+    "history": [
+      {
+        "operation": "2+2",
+        "result": 4
+      },
+      {
+        "operation": "5*3",
+        "result": 15
+      },
+      {
+        "operation": "10-7",
+        "result": 3
+      }
+    ]
+  }
