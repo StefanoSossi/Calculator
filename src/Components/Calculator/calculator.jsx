@@ -1,31 +1,91 @@
-import React, { useState } from "react"
-import "./style.css"
+import React, { useEffect, useState } from "react";
+import "./style.css";
+import axios from "axios";
+import evalOperation from "./eval";
 
-const Calculator = () =>{
-    const [result, setResult] = useState(0)
+const Calculator = () => {
+  const [result, setResult] = useState("");
+  const [historial, setHistorial] = useState([]);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    return(
-        <div className="container color-black">
-            <div class="display">{result}</div>
-            <div class="button">7</div>
-            <div class="button">8</div>
-            <div class="button">9</div>
-            <div class="button">+</div>
-            <div class="button">4</div>
-            <div class="button">5</div>
-            <div class="button">6</div>
-            <div class="button">-</div>
-            <div class="button">1</div>
-            <div class="button">2</div>
-            <div class="button">3</div>
-            <div class="button">x</div>
-            <div class="button">0</div>
-            <div class="button">.</div>
-            <div class="button">=</div>
-            <div class="button">÷</div>
-        </div>
-    )
-}
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("../../../public/historial.json");
+      console.log(response)
+      setHistorial(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-export default Calculator
+  const calculateHandler = () => {
+    const evalResult = evalOperation(result);
+    const newResult = {
+        operation: result,
+        result: evalResult
+    }
+    setResult(String(evalResult));
+    setHistorial([...historial, newResult]);
+    console.log(historial)
+  };
+
+  const typeHandler = (value) => {
+    setResult((prevResult) => prevResult + value);
+  };
+
+  return (
+    <div className="container color-black">
+      <div className="display">{result}</div>
+      <div className="button" onClick={() => typeHandler("7")}>
+        7
+      </div>
+      <div className="button" onClick={() => typeHandler("8")}>
+        8
+      </div>
+      <div className="button" onClick={() => typeHandler("9")}>
+        9
+      </div>
+      <div className="button" onClick={() => typeHandler("+")}>
+        +
+      </div>
+      <div className="button" onClick={() => typeHandler("4")}>
+        4
+      </div>
+      <div className="button" onClick={() => typeHandler("5")}>
+        5
+      </div>
+      <div className="button" onClick={() => typeHandler("6")}>
+        6
+      </div>
+      <div className="button" onClick={() => typeHandler("-")}>
+        -
+      </div>
+      <div className="button" onClick={() => typeHandler("1")}>
+        1
+      </div>
+      <div className="button" onClick={() => typeHandler("2")}>
+        2
+      </div>
+      <div className="button" onClick={() => typeHandler("3")}>
+        3
+      </div>
+      <div className="button" onClick={() => typeHandler("*")}>
+        *
+      </div>
+      <div className="button" onClick={() => typeHandler("0")}>
+        0
+      </div>
+      <div className="button" onClick={calculateHandler}>
+        =
+      </div>
+      <div className="button" onClick={() => typeHandler("/")}>
+        /
+      </div>
+    </div>
+  );
+};
+
+export default Calculator;
