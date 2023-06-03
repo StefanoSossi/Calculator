@@ -5,10 +5,20 @@ import evalOperation from "./eval";
 
 const Calculator = () => {
   const [result, setResult] = useState("");
-  const [historial, setHistorial] = useState([]);
+  const [historial, setHistorial] = useState(null);
   const listRef = useRef(null);
 
   useEffect(()=> {
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("historial.json");
+        setHistorial(response.data.history);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
     fetchData();
   }, []);
 
@@ -18,17 +28,9 @@ const Calculator = () => {
     }
   }, [historial]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("../../../public/historial.json");
-      setHistorial(response.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const calculateHandler = () => {
-    if( result !== "" && !["/","*","+","-"].includes(result[0])){
+    if( errorHandler() ){
         const evalResult = evalOperation(result);
         const newResult = {
             id: historial.length + 1,
@@ -39,10 +41,47 @@ const Calculator = () => {
         setHistorial([...historial, newResult]);
         console.log(historial)
     } else{
-        alert("Operation can not be empty or start with an operator")
-        //see case of -4+5 it should be possible
+      setResult('')
     }
   };
+
+  function errorHandler() {
+    if( result === ""){
+      alert("Operation can not be empty")
+      return false
+    }
+
+    if(["/","*"].includes(result[0])){
+      alert("Operation can not start with an operator")
+      return false
+    } 
+
+    if(result.includes("/0")){
+      alert("Operation can not divide by 0")
+      return false
+    }
+
+    if(/^[a-z,A-Z]$/.test(result[0])){
+      alert("Operation can only have numbers")
+      return false
+    } 
+    
+    const operatorsCombined = ['-+','-*','-/','+-','+*','+/','*-','*+','*/','/-','/+','/*'];
+    if(operatorsCombined.some(operatorCombined => result.includes(operatorCombined))){
+      alert("Operation can not have two consecutive operators")
+      return false
+    } 
+
+    if(result[0] === '+'){
+      result.splice(0, 1);
+    } 
+
+    if(result[0] === '-'){
+      setResult(['0',...result]);
+    }
+
+    return true
+  }
 
   const deleteHandler = () => {
     setResult(result.slice(0,-1));
@@ -51,6 +90,10 @@ const Calculator = () => {
   const typeHandler = (value) => {
     setResult((prevResult) => prevResult + value);
   };
+
+  if (!historial) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container color-black">
