@@ -25,6 +25,10 @@
     background-color: #e6e6e6;
   }
 
+  .clear {
+    grid-column: 1 / span 4;
+  }
+
   .display {
     grid-column: 1 / span 4;
     height: 64px;

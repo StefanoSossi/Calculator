@@ -31,6 +31,10 @@ const Calculator = () => {
     console.log(historial)
   };
 
+  const deleteHandler = () => {
+    setResult(result.slice(0,-1));
+  };
+
   const typeHandler = (value) => {
     setResult((prevResult) => prevResult + value);
   };
@@ -38,6 +42,9 @@ const Calculator = () => {
   return (
     <div className="container color-black">
       <div className="display">{result}</div>
+      <div className="button clear" onClick={() => { setResult("") }}>
+        CLEAR
+      </div>
       <div className="button" onClick={() => typeHandler("7")}>
         7
       </div>
@@ -82,6 +89,9 @@ const Calculator = () => {
       </div>
       <div className="button" onClick={() => typeHandler("/")}>
         /
+      </div>
+      <div className="button" onClick={deleteHandler}>
+        DEL
       </div>
     </div>
   );
