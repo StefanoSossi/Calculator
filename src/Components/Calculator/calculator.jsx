@@ -14,7 +14,6 @@ const Calculator = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get("../../../public/historial.json");
-      console.log(response)
       setHistorial(response.data);
     } catch (e) {
       console.log(e);
