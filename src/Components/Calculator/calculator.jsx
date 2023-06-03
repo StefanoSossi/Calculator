@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef  } from "react";
 import "./style.css";
 import axios from "axios";
 import evalOperation from "./eval";
@@ -6,10 +6,17 @@ import evalOperation from "./eval";
 const Calculator = () => {
   const [result, setResult] = useState("");
   const [historial, setHistorial] = useState([]);
+  const listRef = useRef(null);
 
-  useEffect(() => {
+  useEffect(()=> {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (listRef.current && listRef.current.lastElementChild) {
+        listRef.current.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [historial]);
 
   const fetchData = async () => {
     try {
@@ -21,7 +28,7 @@ const Calculator = () => {
   };
 
   const calculateHandler = () => {
-    if(result !== "" && !["/","*","+","-"].includes(result[0])){
+    if( result !== "" && !["/","*","+","-"].includes(result[0])){
         const evalResult = evalOperation(result);
         const newResult = {
             id: historial.length + 1,
@@ -33,6 +40,7 @@ const Calculator = () => {
         console.log(historial)
     } else{
         alert("Operation can not be empty or start with an operator")
+        //see case of -4+5 it should be possible
     }
   };
 
@@ -46,18 +54,14 @@ const Calculator = () => {
 
   return (
     <div className="container color-black">
-      <div className="display historial">
-        {historial.map((elem)=>{
-            return(
-                <div className="display" key={elem.id}>
-                    <div className="operation"> {elem.operation} </div>
-                    <h6> = </h6>
-                    <div className="result"> {elem.result} </div>
-                </div >
-            )
-        })
+      <ul  ref={listRef} className="historial" style={{ listStyle: 'none', overflowY: 'auto' }}>
+        {historial.map((elem)=>(
+            <li key={elem.id}>
+                {elem.operation} = {elem.result} 
+            </li >
+        ))
         }
-      </div>
+      </ul>
       <div className="display">{result}</div>
       <div className="button clear" onClick={() => { setResult("") }}>
         CLEAR

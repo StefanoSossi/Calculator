@@ -42,13 +42,10 @@
   }
 
   .historial {
-    height: 200px;
-  }
-
-  .operation {
-    align-items: left;
-  }
-
-  .result {
-    align-items: right;
+    max-height: 120px;
+    grid-column: 1 / span 4;
+    background-color: #ffffff;
+    border-radius: 4px;
+    font-size: 28px;
+    padding: 0 16px;
   }

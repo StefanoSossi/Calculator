@@ -1,12 +1,18 @@
 function evalOperation ( operation ) {
     let operands = operation.split(/[-+/*]/);
     let operators = operation.match(/[-+/*]/g);
-    let result = 0;
-    do {
-        [operators, operands, result] = evalMultDiv(operators, operands, result)
-    } while (operators.some((element) => ["/","*"].includes(element)));
-        
-    return String(evalSumSubst(operators, operands, result))
+
+    if(!operators){
+        return operation
+    }
+    else{
+        let result = 0;
+        do {
+            [operators, operands, result] = evalMultDiv(operators, operands, result)
+        } while (operators.some((element) => ["/","*"].includes(element)));
+            
+        return String(evalSumSubst(operators, operands, result))
+    }
 };
 
 function evalMultDiv(operators, operands, result){
