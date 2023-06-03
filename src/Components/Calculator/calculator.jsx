@@ -21,14 +21,19 @@ const Calculator = () => {
   };
 
   const calculateHandler = () => {
-    const evalResult = evalOperation(result);
-    const newResult = {
-        operation: result,
-        result: evalResult
+    if(result !== "" && !["/","*","+","-"].includes(result[0])){
+        const evalResult = evalOperation(result);
+        const newResult = {
+            id: historial.length + 1,
+            operation: result,
+            result: evalResult
+        }
+        setResult(evalResult);
+        setHistorial([...historial, newResult]);
+        console.log(historial)
+    } else{
+        alert("Operation can not be empty or start with an operator")
     }
-    setResult(String(evalResult));
-    setHistorial([...historial, newResult]);
-    console.log(historial)
   };
 
   const deleteHandler = () => {
@@ -41,6 +46,18 @@ const Calculator = () => {
 
   return (
     <div className="container color-black">
+      <div className="display historial">
+        {historial.map((elem)=>{
+            return(
+                <div className="display" key={elem.id}>
+                    <div className="operation"> {elem.operation} </div>
+                    <h6> = </h6>
+                    <div className="result"> {elem.result} </div>
+                </div >
+            )
+        })
+        }
+      </div>
       <div className="display">{result}</div>
       <div className="button clear" onClick={() => { setResult("") }}>
         CLEAR

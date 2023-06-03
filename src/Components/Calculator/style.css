@@ -40,3 +40,15 @@
     align-items: center;
     padding: 0 16px;
   }
+
+  .historial {
+    height: 200px;
+  }
+
+  .operation {
+    align-items: left;
+  }
+
+  .result {
+    align-items: right;
+  }
